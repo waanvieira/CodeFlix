@@ -25,7 +25,7 @@ services:
         restart: always
         tty: true
         ports:
-            - "8000:80"
+            - "9000:80"
         volumes:
             - .:/var/www
         networks:
@@ -59,3 +59,6 @@ services:
 networks:
     app-network:
         driver: bridge
+        ipam:
+            config:
+            - subnet: 172.16.57.0/24
