@@ -155,8 +155,9 @@ class CategoryControllerTest extends TestCase
         $data = [
             'name' => 'Name test'
         ] ;
-
+        
         $this->assertStore($data, $data + ['description' => null, 'is_active' => true]);
+         
         //Forma antiga para validar
         // $response = $this->json('POST', route('categories.store'), [
         //     'name' => 'Name test'
@@ -192,7 +193,6 @@ class CategoryControllerTest extends TestCase
      */
     public function testUpdate()
     {
-
         $this->category = factory(Category::class)->create([
             'description' => 'description',
             'is_active' => false

@@ -49,6 +49,7 @@ class BasicCrudControllerTest extends TestCase
     public function testInvalidationDataInStore()
     {
         $this->expectException(ValidationException::class);
+        /** @var Mockery */
         $request = \Mockery::mock(Request::class);
         $request
             ->shouldReceive('all')
@@ -63,6 +64,7 @@ class BasicCrudControllerTest extends TestCase
      */
     public function testStore()
     {
+        /** @var Mockery */
         $request = \Mockery::mock(Request::class);
         $request
             ->shouldReceive('all')

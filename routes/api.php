@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +25,5 @@ Route::group(['namespace' => 'Api'], function () {
 
     Route::resource('categories', 'CategoryController', $exceptionCreateEdit);
     Route::resource('genres', 'GenreController', $exceptionCreateEdit);
+    Route::resource('cast_members', 'CastMemberController', $exceptionCreateEdit);
 });
