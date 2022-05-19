@@ -19,4 +19,14 @@ class Genre extends Model
     ];
     //Pra retornar o uuid, sem essa variável o id retorna como 0
     public $incrementing = false;
+
+    public function Videos()
+    {
+        return $this->belongsToMany(Videos::class);
+    }
+
+    public function Categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }

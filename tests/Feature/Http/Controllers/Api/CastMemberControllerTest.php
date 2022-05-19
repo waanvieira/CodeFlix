@@ -21,7 +21,9 @@ class CastMemberControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->castMember = factory(CastMember::class)->create();
+        $this->castMember = factory(CastMember::class)->create([
+            'type' => CastMember::TYPE_DIRECTOR
+        ]);
     }
 
     /**
@@ -54,7 +56,8 @@ class CastMemberControllerTest extends TestCase
     public function testInvalidationData()
     {
         $data = [
-            'name' => ''
+            'name' => '',
+            'type' => ''
         ];
 
         $this->assertInvalidationInStoreStoreAction($data, 'required');
@@ -138,14 +141,14 @@ class CastMemberControllerTest extends TestCase
     {
         $data = [
             'name' => 'Name test',
-            'type' => 1
+            'type' => CastMember::TYPE_DIRECTOR
         ];
 
         $this->assertStore($data, $data);
 
         $data = [
             'name' => 'Name test 2',
-            'type' => 2
+            'type' => CastMember::TYPE_ACTOR
         ];
 
         $this->assertStore($data, $data);
@@ -159,12 +162,12 @@ class CastMemberControllerTest extends TestCase
     public function testUpdate()
     {
         $castMember = factory(CastMember::class)->create([
-            'type' => 1
+            'type' => CastMember::TYPE_DIRECTOR
         ]);
 
         $response = $this->json('PUT', route('cast_members.update', ['cast_member' => $castMember->id]), [
             'name' => 'Name updated',
-            'type' => 2
+            'type' => CastMember::TYPE_ACTOR
         ]);
 
         $response

@@ -10,7 +10,7 @@ class Category extends Model
 {
     use SoftDeletes;
     use UuidTrait;
-    
+
     protected $fillable = ['name', 'description', 'is_active'];
     protected $dates = ['deleted_at'];
     protected $casts = [
@@ -19,4 +19,14 @@ class Category extends Model
     ];
     //Pra retornar o uuid, sem essa variável o id retorna como 0
     public $incrementing = false;
+
+    public function Videos()
+    {
+        return $this->belongsToMany(Videos::class);
+    }
+
+    public function Genries()
+    {
+        return $this->belongsToMany(Genre::class);
+    }
 }

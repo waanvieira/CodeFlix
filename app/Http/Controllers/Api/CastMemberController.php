@@ -7,16 +7,29 @@ use Illuminate\Http\Request;
 
 class CastMemberController extends BasicCrudController
 {
+
+    /** @vard array */
+    private $rules;
+
+    public function __contruct()
+    {
+        $this->rules =[
+            'name' => 'required|max:255',
+            'type' => 'required|in:' . implode(',', [CastMember::TYPE_ACTOR, CastMember::TYPE_DIRECTOR])
+        ];
+    }
     protected function model()
     {
         return CastMember::class;
     }
-   
+    
     protected function rulesStore()
     {
-        return [
-            'name' => 'required|max:255',
-            'type' => 'nullable'
-        ];
+        return $this->rules;
+    }
+
+    protected function rulesUpdate()
+    {
+        return $this->rules;
     }
 }

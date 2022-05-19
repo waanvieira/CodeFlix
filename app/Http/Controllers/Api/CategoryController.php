@@ -6,6 +6,19 @@ use App\Models\Category;
 
 class CategoryController extends BasicCrudController
 {
+
+    /** @vard array */
+    private $rules;
+
+    public function __contruct()
+    {
+        $this->rules = [
+            'name'      => 'required|max:255',
+            'description' => 'nullable',
+            'is_active' => 'boolean'
+        ];
+    }
+
     protected function model()
     {
         return Category::class;
@@ -13,13 +26,14 @@ class CategoryController extends BasicCrudController
 
     protected function rulesStore()
     {
-        return [
-            'name'      => 'required|max:255',
-            'description' => 'nullable',
-            'is_active' => 'boolean'
-        ];
+        return $this->rules;
     }
-    
+
+    protected function rulesUpdate()
+    {
+        return $this->rules;
+    }
+
     // public function index()
     // {
     //     return Category::all();
