@@ -22,4 +22,9 @@ class CastMember extends Model
     ];
 
     public $incrementing = false;
+
+    public function videos()
+    {
+        return $this->belongsToMany(Videos::class);
+    }
 }

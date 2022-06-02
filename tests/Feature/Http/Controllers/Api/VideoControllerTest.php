@@ -10,7 +10,7 @@ use Tests\TestCase;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
-class GenreControllerTest extends TestCase
+class VideoControllerTest extends TestCase
 {
     use DatabaseMigrations;
     use TestValidations;

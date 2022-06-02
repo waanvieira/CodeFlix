@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Models\Category;
 use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -23,7 +24,6 @@ class GenreControllerTest extends TestCase
         parent::setUp();
         $this->genre = factory(Genre::class)->create();
     }
-
 
     /**
      * 
@@ -155,9 +155,10 @@ class GenreControllerTest extends TestCase
      */
     public function testStore()
     {
-
+        $category = factory(Category::class)->create()->pluck('id')->toArray();
         $data = [
-            'name' => 'Name test'
+            'name' => 'Name test',
+            'categories_id' => $category
         ];
 
         $this->assertStore($data, $data + ['is_active' => true]);
@@ -191,23 +192,57 @@ class GenreControllerTest extends TestCase
      * @group Genre
      * @return void
      */
-    public function testUpdate()
+    // public function testUpdate()
+    // {
+    //     $genre = factory(Genre::class)->create([
+    //         'is_active' => false,
+    //         'categories_id' => 1
+    //     ]);
+
+    //     $response = $this->json('PUT', route('genres.update', ['genre' => $genre->id]), [
+    //         'name' => 'Name updated',
+    //         'is_active' => true
+    //     ]);
+
+    //     $response
+    //         ->assertStatus(200)
+    //         ->assertJsonFragment([
+    //             'name' => 'Name updated',
+    //             'is_active' => true,
+    //         ]);
+    // }
+
+    /**
+     * 
+     * @group Genre
+     * @return void
+     */
+    public function testSyncGenres()
     {
-        $genre = factory(Genre::class)->create([
-            'is_active' => false
-        ]);
+        $genres = factory(Genre::class, 3)->create();
+        $genresId = $genres->pluck('id')->toArray();
+        $categoryId = factory(Category::class)->create();
+        $genres->each(function ($genre) use ($categoryId) {
+            $genre->categories()->sync($categoryId);
+        });
 
-        $response = $this->json('PUT', route('genres.update', ['genre' => $genre->id]), [
-            'name' => 'Name updated',
-            'is_active' => true
-        ]);
+        $response = $this->json(
+            'POST',
+            $this->routeStore(),
+            $this->sendData + [
+                'categories_id' => [$categoryId],
+                'genre_id' => [$genresId[0]],
+            ]
+        );
 
-        $response
-            ->assertStatus(200)
-            ->assertJsonFragment([
-                'name' => 'Name updated',
-                'is_active' => true,
-            ]);
+        $re = $this->assertDatabaseHas('genre_video',            
+            [
+                'genre_id' => [$genresId],
+                'genres_id' => [$genresId[0]]
+            ]
+        );
+
+        dd($re);
     }
 
     /**

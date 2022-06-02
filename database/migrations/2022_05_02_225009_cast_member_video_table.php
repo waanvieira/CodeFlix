@@ -15,9 +15,9 @@ class CastMemberVideoTable extends Migration
     {
         Schema::create('cast_member_video', function (Blueprint $table) {
             $table->uuid('cast_member_id')->index();
-            $table->foreign('cast_member_id')->references('id')->on('cast_members')->onDelete('cascade');
+            $table->foreign('cast_member_id')->references('id')->on('cast_members');
             $table->uuid('video_id')->index();
-            $table->foreign('video_id')->references('id')->on('videos')->onDelete('cascade');
+            $table->foreign('video_id')->references('id')->on('videos');
             $table->unique(['cast_member_id', 'video_id']);
         });
     }

@@ -17,15 +17,15 @@ class Category extends Model
         'id' => 'string',
         'is_active' => 'boolean'
     ];
-    //Pra retornar o uuid, sem essa variável o id retorna como 0
+    //Pra retornar o uuid, sem essa variï¿½vel o id retorna como 0
     public $incrementing = false;
 
-    public function Videos()
+    public function videos()
     {
         return $this->belongsToMany(Videos::class);
     }
 
-    public function Genries()
+    public function genres()
     {
         return $this->belongsToMany(Genre::class);
     }
