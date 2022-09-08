@@ -40,7 +40,7 @@ services:
         restart: always
         tty: true
         ports:
-            - "33006:3306"
+            - "3306:3306"
         volumes:
             - ./.docker/dbdata:/var/lib/mysql
             - ./.docker/mysql:/docker-entrypoint-initdb.d
@@ -49,6 +49,13 @@ services:
             - MYSQL_ROOT_PASSWORD=root
         networks:
             - app-network
+
+    adminer:
+        image: adminer
+        ports:
+        - 8080:8080
+        networks:
+          - app-network
 
     redis:
         image: redis:alpine
