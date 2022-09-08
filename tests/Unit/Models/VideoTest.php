@@ -19,18 +19,18 @@ class VideoTest extends TestCase
 
     /**
      *
-     * @group video
+     * @group Video
      * @return void
      */
     public function testsFillableAttributes()
     {
-        $expected = ['title', 'description', 'year_launched', 'opened', 'rating', 'duration'];
+        $expected = ['title', 'video_file', 'description', 'year_launched', 'opened', 'rating', 'duration'];
         $this->assertEquals($expected, $this->video->getFillable());
     }
 
     /**
      *
-     * @group video
+     * @group Video
      * @return void
      */
     public function testIfUserTraits()
@@ -45,7 +45,7 @@ class VideoTest extends TestCase
 
     /**
      *
-     * @group video
+     * @group Video
      * @return void
      */
     public function testCasts()
@@ -61,7 +61,7 @@ class VideoTest extends TestCase
 
     /**
      *
-     * @group video
+     * @group Video
      * @return void
      */
     public function testIncrementing()
@@ -71,12 +71,57 @@ class VideoTest extends TestCase
 
     /**
      *
-     * @group video
+     * @group Video
      * @return void
      */
     public function testDatesAttributes()
     {
         $dates = ['deleted_at', 'created_at', 'updated_at'];
         $this->assertEqualsCanonicalizing($dates, $this->video->getDates());
+    }
+
+    /**
+     *
+     * @group Video
+     * @return void
+     */
+    public function testRatingList()
+    {
+        $rating = [
+            'L', '10', '12', '14', '16', '18'
+        ];
+
+        $videoRatingList = Video::RATING_LIST;
+        $this->assertEquals($rating, $videoRatingList);
+    }
+
+    /**
+     *
+     * @group Video
+     * @return void
+     */
+    public function testVideoSizeMax()
+    {
+        $this->assertEquals(100000, Video::VIDEO_FILE_MAX_SIZE);
+    }
+
+    /**
+     *
+     * @group Video
+     * @return void
+     */
+    public function testBannerSizeMax()
+    {
+        $this->assertEquals(1000, Video::BANNER_FILE_MAX_SIZE);
+    }
+
+    /**
+     *
+     * @group Video
+     * @return void
+     */
+    public function testTrailerSizeMax()
+    {
+        $this->assertEquals(10000, Video::TRAILER_FILE_MAX_SIZE);
     }
 }

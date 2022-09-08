@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Video;
+use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +12,7 @@ class VideoController extends BasicCrudController
 {
     /** @vard array */
     private $rules;
+    use UploadTrait;
 
     public function __construct()
     {
@@ -18,21 +20,23 @@ class VideoController extends BasicCrudController
             'title' => 'required|max:255',
             'description' => 'nullable',
             'year_launched' => 'required|max:5',
-            'opened' => 'nullable',
+            'opened' => 'nullable|boolean',
             'rating' => 'required|in:' . implode(',', Video::RATING_LIST),
             'duration' => 'required',
             'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
             'genres_id' => 'required|array|exists:genres,id,deleted_at,NULL',
+            'file' => 'nullable|mimetypes:video/mp4|max:' . Video::VIDEO_FILE_MAX_SIZE,
         ];
     }
 
-
     public function store(Request $request)
     {
-        $validateData = Validator::make($request->all(), $this->rulesStore());
-        $response = DB::transaction(function () use ($validateData){
+        $validateData = $this->validate($request, $this->rulesStore());
+        
+        $response = DB::transaction(function () use ($validateData) {
             $response = $this->model()::create($validateData);
             $this->handleRelations($response, $validateData);
+            $this->putFile($validateData, 'video', $response);
             return $response;
         });
 
@@ -43,9 +47,8 @@ class VideoController extends BasicCrudController
     public function update(Request $request, $id)
     {
         $obj = $this->findOrFail($id);
-        $validateData = Validator::make($request->all(), $this->rulesStore());
-
-        $response = DB::transaction(function () use ($validateData, $obj, $request){
+        $validateData = $this->validate($request, $this->rulesStore());
+        $response = DB::transaction(function () use ($validateData, $obj, $request) {
             $obj->update($validateData);
             $this->handleRelations($obj, $request);
             return $obj;
@@ -79,5 +82,10 @@ class VideoController extends BasicCrudController
     protected function rulesUpdate()
     {
         return $this->rules;
+    }
+
+    protected function uploadDir()
+    {
+        return 'video' ;
     }
 }

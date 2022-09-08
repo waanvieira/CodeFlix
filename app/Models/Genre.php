@@ -17,7 +17,8 @@ class Genre extends Model
         'id' => 'string',
         'is_active' => 'boolean'
     ];
-    //Pra retornar o uuid, sem essa vari�vel o id retorna como 0
+
+    //Pra retornar o uuid, sem essa variável o id retorna como 0
     public $incrementing = false;
 
     public function videos()

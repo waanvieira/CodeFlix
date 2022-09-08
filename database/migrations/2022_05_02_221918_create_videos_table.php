@@ -16,11 +16,12 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
+            $table->string('video_file')->nullable();
+            $table->string('rating', 3);
             $table->text('description');
             $table->smallInteger('year_launched');
-            $table->boolean('opened')->default(false)->comment('Indica se o filme é lançamento ou não');
-            $table->string('rating', 3);
             $table->smallInteger('duration');
+            $table->boolean('opened')->default(false)->comment('Indica se o filme ï¿½ lanï¿½amento ou nï¿½o');
             $table->softDeletes();
             $table->timestamps();
         });
