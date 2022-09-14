@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Models\Category;
 use App\Models\Genre;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Lang;
 use Tests\TestCase;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
@@ -25,7 +24,7 @@ class VideoControllerTest extends TestCase
         parent::setUp();
         $this->video = factory(Video::class)->create();
         $this->genre = factory(Genre::class)->create();
-        $this->category = factory(Genre::class)->create();
+        $this->category = factory(Category::class)->create();
     }
 
     /**
@@ -67,15 +66,8 @@ class VideoControllerTest extends TestCase
 
         $this->assertInvalidationInStoreStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
-
-        // $response
-        //     ->assertStatus(422)
-        //     ->assertJsonValidationErrors(['title'])
-        //     ->assertJsonMissingValidationErrors(['opened'])
-        //     ->assertJsonFragment([
-        //         Lang::get('validation.required', ['attribute' => 'title'])
-        //     ]);
     }
+
     /**
      * 
      * @group Video
@@ -89,12 +81,16 @@ class VideoControllerTest extends TestCase
 
         $this->assertInvalidationInStoreStoreAction($data, 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
-
+        
         \Storage::fake();
-        $file = UploadedFile::fake()->create('video.mkv')->size(20000);
+        $file = UploadedFile::fake()->create('video.mkv')->size(200000);
         $data = [
             'file' => $file,
         ];
+
+        $this->assertInvalidationInStoreStoreAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
+        $this->assertInvalidationInUpdateAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
+
     }
 
     /**
@@ -109,12 +105,6 @@ class VideoControllerTest extends TestCase
         ];
         $this->assertInvalidationInStoreStoreAction($data, 'boolean');
         $this->assertInvalidationInUpdateAction($data, 'boolean');
-        // $response
-        //     ->assertStatus(422)
-        //     ->assertJsonValidationErrors(['opened'])
-        //     ->assertJsonFragment([
-        //         Lang::get('validation.boolean', ['attribute' => 'is opened'])
-        //     ]);
     }
 
     /**
@@ -168,47 +158,55 @@ class VideoControllerTest extends TestCase
      * @group Video
      * @return void
      */
-    // public function testStore()
-    // {
-    //     \Storage::fake();
-    //     $file = UploadedFile::fake()->create('video.mp4');
+    public function testStore()
+    {
+        \Storage::fake();
+        $file = UploadedFile::fake()->create('video.mp4')->size(200);
+        $category = factory(Category::class)->create();
+        $genre = factory(Genre::class)->create();        
+        $genre->categories()->sync($category->id);
+        
+        $data = [
+            'title' => 'Name test',
+            'description' => 'description',
+            'year_launched' => 2022,
+            'opened' => true,
+            'rating' => Video::RATING_LIST[array_rand(Video::RATING_LIST)],
+            'duration' => 10,
+            'video_file' => $file
+        ];
 
-    //     $data = [
-    //         'title' => 'Name test',
-    //         'description' => 'description',
-    //         'year_launched' => 2022,
-    //         'opened' => 1,
-    //         'rating' => Video::RATING_LIST[array_rand(Video::RATING_LIST)],
-    //         'duration' => 10,
-    //         'categories_id' => [$this->category->id],
-    //         'genres_id' => [$this->genre->id],
-    //         'file' => $file
-    //     ];
+        $this->assertStore($data + 
+                    ['categories_id' => [$this->category->id],
+                    'genres_id' => [$this->genre->id]]
+        , $data);
 
-    //     $this->assertStore($data, $data);
-    // }
+    }
 
     /**
      * 
      * @group Video
      * @return void
      */
-    // public function testUpdate()
-    // {
-    //     $video = factory(Video::class)->create([
-    //         'opened' => false
-    //     ]);
+    public function testUpdate()
+    {
+        $video = factory(Video::class)->create([
+            'opened' => false
+        ]);
 
-    //     $response = $this->json('PUT', route('videos.update', ['video' => $video->id]), [
-    //         'title' => 'Name updated'
-    //     ]);
+        $data = [
+            'title' => 'Name update',
+            'description' => 'description update',
+            'year_launched' => 2022,
+            'opened' => 1,
+            'rating' => Video::RATING_LIST[array_rand(Video::RATING_LIST)],
+            'duration' => 10,
+            'categories_id' => [$this->category->id],
+            'genres_id' => [$this->genre->id],
+        ];
 
-    //     $response
-    //         ->assertStatus(200)
-    //         ->assertJsonFragment([
-    //             'title' => 'Name updated'
-    //         ]);
-    // }
+        $this->assertUpdate($data, $video);
+    }
 
     /**
      * 

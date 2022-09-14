@@ -6,12 +6,12 @@ use App\Models\Video;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class VideoController extends BasicCrudController
 {
     /** @vard array */
     private $rules;
+
     use UploadTrait;
 
     public function __construct()
@@ -25,18 +25,17 @@ class VideoController extends BasicCrudController
             'duration' => 'required',
             'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
             'genres_id' => 'required|array|exists:genres,id,deleted_at,NULL',
-            'file' => 'nullable|mimetypes:video/mp4|max:' . Video::VIDEO_FILE_MAX_SIZE,
+            'video_file' => 'nullable|mimetypes:video/mp4|max:' . Video::VIDEO_FILE_MAX_SIZE,
         ];
     }
-
+    
     public function store(Request $request)
     {
         $validateData = $this->validate($request, $this->rulesStore());
-        
         $response = DB::transaction(function () use ($validateData) {
             $response = $this->model()::create($validateData);
             $this->handleRelations($response, $validateData);
-            $this->putFile($validateData, 'video', $response);
+            // $this->uploadFile($validateData->video_file);
             return $response;
         });
 
@@ -60,8 +59,8 @@ class VideoController extends BasicCrudController
 
     protected function handleRelations($response, $request)
     {
-        $response->genres()->sync($request->get('genres_id'));
-        $response->category()->sync($request->get('category_id'));
+        // $response->categories()->sync($request['categories_id']);
+        // $response->genres()->sync($request['genres_id']);
     }
 
     public function show($id)
