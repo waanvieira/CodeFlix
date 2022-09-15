@@ -22,8 +22,8 @@ class CategoryControllerTest extends TestCase
         $this->category = factory(Category::class)->create();
     }
 
-    //Outro método que uso, porém toda vez que for utilizar cria uma nova category
-    // com o método acima não faz isso e fica mais elegante
+    //Outro mï¿½todo que uso, porï¿½m toda vez que for utilizar cria uma nova category
+    // com o mï¿½todo acima nï¿½o faz isso e fica mais elegante
     // private function createCategory()
     // {
     //     return factory(Category::class)->create();
@@ -58,9 +58,9 @@ class CategoryControllerTest extends TestCase
      */
     public function testInvalidationData()
     {
-        //Método comum. faz direcionamento para uma págin
+        //Mï¿½todo comum. faz direcionamento para uma pï¿½gin
         // $response = $this->post(route('categories.store'), []);
-        //Método correto para testar de fato uma API
+        //Mï¿½todo correto para testar de fato uma API
         $response = $this->json('POST', route('categories.store'), []);
         //Verificar o conteudo da resposta para um debug melhor
         // dd($response->content());
@@ -78,20 +78,20 @@ class CategoryControllerTest extends TestCase
             'name' => ''
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'required');
+        $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
 
         $data = [
             'name' => str_repeat('a', 256)
         ];
         
-        $this->assertInvalidationInStoreStoreAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
 
         $data = [
             'is_active' => 'a'
         ];
-        $this->assertInvalidationInStoreStoreAction($data, 'boolean');
+        $this->assertInvalidationInStoreAction($data, 'boolean');
         $this->assertInvalidationInUpdateAction($data, 'boolean');
 
         // $response = $this->json('POST', route('categories.store'), []);
@@ -222,7 +222,7 @@ class CategoryControllerTest extends TestCase
         $data['description'] = null;
         $this->assertUpdate($data, array_merge($data, ['description' => null]));
 
-        //Métodos antigos, apenas para consulta
+        //Mï¿½todos antigos, apenas para consulta
         // $data = [
         //     'name' => 'Name test',
         //     'description' => 'testing',

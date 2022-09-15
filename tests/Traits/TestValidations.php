@@ -11,7 +11,7 @@ trait TestValidations
     protected abstract function routeStore();
     protected abstract function routeUpdate();
 
-    protected function assertInvalidationInStoreStoreAction(
+    protected function assertInvalidationInStoreAction(
         array $data,
         string $rule,
         $ruleParams = []

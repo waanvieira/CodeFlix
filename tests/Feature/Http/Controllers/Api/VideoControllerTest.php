@@ -64,7 +64,7 @@ class VideoControllerTest extends TestCase
             'genres_id' => ''
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'required');
+        $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
     }
 
@@ -79,7 +79,7 @@ class VideoControllerTest extends TestCase
             'title' => str_repeat('a', 256),
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
         
         \Storage::fake();
@@ -88,7 +88,7 @@ class VideoControllerTest extends TestCase
             'file' => $file,
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
+        $this->assertInvalidationInStoreAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
         $this->assertInvalidationInUpdateAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
 
     }
@@ -103,7 +103,7 @@ class VideoControllerTest extends TestCase
         $data = [
             'opened' => 's'
         ];
-        $this->assertInvalidationInStoreStoreAction($data, 'boolean');
+        $this->assertInvalidationInStoreAction($data, 'boolean');
         $this->assertInvalidationInUpdateAction($data, 'boolean');
     }
 
@@ -118,14 +118,14 @@ class VideoControllerTest extends TestCase
             'categories_id' => 'a'
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'array');
+        $this->assertInvalidationInStoreAction($data, 'array');
         $this->assertInvalidationInUpdateAction($data, 'array');
 
         $data = [
             'genres_id' => 'a'
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'array');
+        $this->assertInvalidationInStoreAction($data, 'array');
         $this->assertInvalidationInUpdateAction($data, 'array');
     }
 
@@ -140,7 +140,7 @@ class VideoControllerTest extends TestCase
             'categories_id' => [100]
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'exists');
+        $this->assertInvalidationInStoreAction($data, 'exists');
         $this->assertInvalidationInUpdateAction($data, 'exists');
 
 
@@ -149,7 +149,7 @@ class VideoControllerTest extends TestCase
             'genres_id' => [100]
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'exists');
+        $this->assertInvalidationInStoreAction($data, 'exists');
         $this->assertInvalidationInUpdateAction($data, 'exists');
     }
 

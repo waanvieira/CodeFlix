@@ -60,14 +60,14 @@ class CastMemberControllerTest extends TestCase
             'type' => ''
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'required');
+        $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
 
         $data = [
             'name' => str_repeat('a', 256)
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
     }
 

@@ -59,40 +59,48 @@ class GenreControllerTest extends TestCase
             'categories_id' => ''
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'required');
+        $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
 
         $data = [
             'name' => str_repeat('a', 256)
         ];
 
-        $this->assertInvalidationInStoreStoreAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
 
         $data = [
             'is_active' => 'a'
         ];
-        $this->assertInvalidationInStoreStoreAction($data, 'boolean');
+        $this->assertInvalidationInStoreAction($data, 'boolean');
         $this->assertInvalidationInUpdateAction($data, 'boolean');
 
         $data = [
             'categories_id' => 'a'
         ];
-        $this->assertInvalidationInStoreStoreAction($data, 'array');
+        $this->assertInvalidationInStoreAction($data, 'array');
         $this->assertInvalidationInUpdateAction($data, 'array');
 
         $data = [
             'categories_id' => [100]
         ];
-        $this->assertInvalidationInStoreStoreAction($data, 'existis');
+        $this->assertInvalidationInStoreAction($data, 'existis');
         $this->assertInvalidationInUpdateAction($data, 'existis');
 
         $category = factory(Category::class)->create();
         $data = [
             'categories_id' => [$category->id]
         ];
-        $this->assertInvalidationInStoreStoreAction($data, 'existis');
+        $this->assertInvalidationInStoreAction($data, 'existis');
         $this->assertInvalidationInUpdateAction($data, 'existis');
+
+        $category = factory(Category::class)->create();
+        $category->delete();
+        $data = [
+            'categories_id' => [$category->id]
+        ];
+        $this->assertInvalidationInStoreAction($data, 'exists');
+        $this->assertInvalidationInUpdateAction($data, 'exists');
     }
 
     /**
