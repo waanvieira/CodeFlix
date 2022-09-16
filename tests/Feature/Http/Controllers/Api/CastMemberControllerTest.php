@@ -116,7 +116,6 @@ class CastMemberControllerTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors(['name'])
-            ->assertJsonMissingValidationErrors(['type'])
             ->assertJsonFragment([
                 Lang::get('validation.required', ['attribute' => 'name'])
             ]);

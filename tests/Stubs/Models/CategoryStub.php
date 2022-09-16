@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class para testar o crud controller sendo um esboço de classe
+ * Class para testar o crud controller sendo um esboÃ§o de classe
  */
 class CategoryStub extends Model
 {

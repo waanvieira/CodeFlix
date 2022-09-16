@@ -54,7 +54,7 @@ class BasicCrudControllerTest extends TestCase
         $request
             ->shouldReceive('all')
             ->once()
-            ->andReturn(['name' => ' ']);
+            ->andReturn(['name' => '']);
         $this->controller->store($request);
     }
 
@@ -83,7 +83,7 @@ class BasicCrudControllerTest extends TestCase
      */
     public function testIfFindOrFailFetchModel()
     {
-        //API para acessar métodos private e protected
+        //API para acessar mï¿½todos private e protected
         $reflectionClass = new \ReflectionClass(BasicCrudController::class);
         $reflectionMethod = $reflectionClass->getMethod('findOrFail');
         $reflectionMethod->setAccessible(true);
@@ -99,7 +99,7 @@ class BasicCrudControllerTest extends TestCase
     public function testIfFindOrFailThrowExceptionWhenIdInvalid()
     {
         $this->expectException(ModelNotFoundException::class);
-        //API para acessar métodos private e protected
+        //API para acessar mï¿½todos private e protected
         $reflectionClass = new \ReflectionClass(BasicCrudController::class);
         $reflectionMethod = $reflectionClass->getMethod('findOrFail');
         $reflectionMethod->setAccessible(true);
