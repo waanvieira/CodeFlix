@@ -11,7 +11,7 @@ class CastMemberController extends BasicCrudController
     /** @vard array */
     private $rules;
 
-    public function __contruct()
+    public function __construct()
     {
         $this->rules =[
             'name' => 'required|max:255',

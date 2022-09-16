@@ -59,8 +59,8 @@ class VideoController extends BasicCrudController
 
     protected function handleRelations($response, $request)
     {
-        // $response->categories()->sync($request['categories_id']);
-        // $response->genres()->sync($request['genres_id']);
+        $response->categories()->sync($request['categories_id']);
+        $response->genres()->sync($request['genres_id']);
     }
 
     public function show($id)
