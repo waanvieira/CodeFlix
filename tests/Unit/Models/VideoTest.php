@@ -24,7 +24,19 @@ class VideoTest extends TestCase
      */
     public function testsFillableAttributes()
     {
-        $expected = ['title', 'video_file', 'description', 'year_launched', 'opened', 'rating', 'duration'];
+        $expected = [
+            'title',
+            'banner_file',
+            'trailer_file',
+            'thumb_file',
+            'video_file',
+            'description',
+            'year_launched',
+            'opened',
+            'rating',
+            'duration'
+        ];
+
         $this->assertEquals($expected, $this->video->getFillable());
     }
 
@@ -100,19 +112,9 @@ class VideoTest extends TestCase
      * @group Video
      * @return void
      */
-    public function testVideoSizeMax()
-    {
-        $this->assertEquals(100000, Video::VIDEO_FILE_MAX_SIZE);
-    }
-
-    /**
-     *
-     * @group Video
-     * @return void
-     */
     public function testBannerSizeMax()
     {
-        $this->assertEquals(1000, Video::BANNER_FILE_MAX_SIZE);
+        $this->assertEquals(10000, Video::BANNER_FILE_MAX_SIZE);
     }
 
     /**
@@ -122,6 +124,26 @@ class VideoTest extends TestCase
      */
     public function testTrailerSizeMax()
     {
-        $this->assertEquals(10000, Video::TRAILER_FILE_MAX_SIZE);
+        $this->assertEquals(1000000, Video::TRAILER_FILE_MAX_SIZE);
+    }
+
+        /**
+     *
+     * @group Video
+     * @return void
+     */
+    public function testThumbSizeMax()
+    {
+        $this->assertEquals(5000, Video::THUMB_FILE_MAX_SIZE);
+    }
+
+    /**
+     *
+     * @group Video
+     * @return void
+     */
+    public function testVideoSizeMax()
+    {
+        $this->assertEquals(50000000, Video::VIDEO_FILE_MAX_SIZE);
     }
 }
