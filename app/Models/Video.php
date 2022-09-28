@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\UploadTrait;
 use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,11 +12,12 @@ class Video extends Model
 {
     use SoftDeletes;
     use UuidTrait;
+    use UploadTrait;
 
     const NO_RATING = 'L';
 
     const RATING_LIST = ['L', '10', '12', '14', '16', '18'];
-    
+
     const BANNER_FILE_MAX_SIZE = 10000; // 10 MB
     const TRAILER_FILE_MAX_SIZE = 1000000; // 1GB
     const THUMB_FILE_MAX_SIZE = 5000; //5 MB
@@ -26,7 +28,7 @@ class Video extends Model
         'banner_file',
         'trailer_file',
         'thumb_file',
-        'video_file',        
+        'video_file',
         'description',
         'year_launched',
         'opened',
@@ -46,6 +48,12 @@ class Video extends Model
 
     public static $fileFields = ['banner_file', 'trailer_file', 'thumb_file', 'video_file'];
 
+    /**
+     *  Método subscreve o método do controller
+     *
+     * @param array $attributes
+     * @return void
+     */
     public static function create(array $attributes = [])
     {
         $files = self::extractFiles($attributes);
@@ -66,6 +74,13 @@ class Video extends Model
         }
     }
 
+    /**
+     * Método subscreve o método update do controller
+     *
+     * @param array $attributes
+     * @param array $options
+     * @return Collection|throw
+     */
     public function update(array $attributes = [], array $options = [])
     {
         $files = self::extractFiles($attributes);
@@ -85,6 +100,16 @@ class Video extends Model
             $this->deleteFiles($files);
             DB::rollBack();
             throw $e;
+        }
+    }
+
+    public static function handleRelations(Video $video, array $attributes)
+    {
+        if (isset($attributes['categories_id'])) {
+            $video->categories()->sync($attributes['categories_id']);
+        }
+        if (isset($attributes['genres_id'])) {
+            $video->genres()->sync($attributes['genres_id']);
         }
     }
 
@@ -111,4 +136,30 @@ class Video extends Model
     {
         return $this->morphOne(File::class, 'fileable');
     }
+
+    protected function uploadDir()
+    {
+        return $this->id;
+    }
+
+    public function getBannerFileAttribute($value)
+    {
+        return $this->getFile($value);
+    }
+
+    public function getTrailerFileAttribute($value)
+    {
+        return $this->getFile($value);
+    }
+
+    public function getThumbFileAttribute($value)
+    {
+        return $this->getFile($value);
+    }
+
+    public function getVideoFileAttribute($value)
+    {
+        return $this->getFile($value);
+    }
+
 }

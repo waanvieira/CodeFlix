@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Image;
@@ -11,11 +13,32 @@ trait UploadTrait
 {
     protected abstract function uploadDir();
 
+    public $oldFiles = [];
+
+    public static function bootUploadFiles()
+    {
+        static::updating(function (Model $model) {
+            $fieldsUpdated = array_keys($model->getDirty());
+            $filesUpdated = array_intersect($fieldsUpdated, self::$fileFields);
+            $filesFiltered = Arr::where($filesUpdated, function ($fileField) use ($model) {
+                return $model->getOriginal($fileField);
+            });
+            $model->oldFiles = array_map(function ($fileField) use ($model) {
+                return $model->getOriginal($fileField);
+            }, $filesFiltered);
+        });
+    }
+
     protected function checkDirectory($fullPath)
     {
         if (!file_exists($fullPath)) {
             mkdir($fullPath, 0777);
         }
+    }
+
+    public function deleteOldFiles()
+    {
+        $this->deleteFiles($this->oldFiles);
     }
 
     /**
@@ -107,11 +130,17 @@ trait UploadTrait
      * @param Object $obj
      * @return void
      */
-    public function uploadFiles(array $files, $obj)
+    public function uploadFiles(array $files, $obj = null)
     {
         foreach ($files as $file) {
             $this->uploadFile($file, $obj);
         }
+    }
+
+    public function getFile($file)
+    {
+        $fileName = $file instanceof UploadedFile ? $file->hashName() : $file;
+        return "{$this->uploadDir()}/{$fileName}";
     }
 
     // protected function uploadFile($uploadFile, $path)
@@ -145,7 +174,7 @@ trait UploadTrait
      */
     protected function checkFileExists($file, $path = null)
     {
-        return asset("uploads/{$file}");
+        return asset("{$this->uploadDir()}/{$file}");
     }
 
     /**
@@ -158,6 +187,18 @@ trait UploadTrait
     {
         $newPath = "app/public/uploads/$path";
         return storage_path($newPath);
+    }
+
+    public static function extractFiles(array &$attributes = [])
+    {
+        $files = [];
+        foreach (self::$fileFields as $file) {
+            if (isset($attributes[$file]) && $attributes[$file] instanceof UploadedFile) {
+                $files[] = $attributes[$file];
+                $attributes[$file] = $attributes[$file]->hashName();
+            }
+        }
+        return $files;
     }
 
     /**
@@ -182,5 +223,10 @@ trait UploadTrait
                 $obj->file()->create($request);
             }
         }
+    }
+
+    protected function getFileUrl($filename)
+    {
+        return \Storage::url($this->getFile($filename));
     }
 }

@@ -5,7 +5,9 @@ namespace Tests\Unit\Models;
 use App\Models\Video;
 use Tests\TestCase;
 use App\Traits\UuidTrait;
+use App\Traits\UploadTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 //Testes unitarios
 class VideoTest extends TestCase
 {
@@ -48,11 +50,11 @@ class VideoTest extends TestCase
     public function testIfUserTraits()
     {
         $traits = [
-            SoftDeletes::class, UuidTrait::class
+            SoftDeletes::class, UuidTrait::class, UploadTrait::class
         ];
 
         $videoTraits = array_keys(class_uses(Video::class));
-        $this->assertEquals($traits, $videoTraits);
+        $this->assertEqualsCanonicalizing($traits, $videoTraits);
     }
 
     /**
@@ -127,7 +129,7 @@ class VideoTest extends TestCase
         $this->assertEquals(1000000, Video::TRAILER_FILE_MAX_SIZE);
     }
 
-        /**
+    /**
      *
      * @group Video
      * @return void

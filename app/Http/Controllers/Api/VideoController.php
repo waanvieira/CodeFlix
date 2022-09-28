@@ -35,35 +35,18 @@ class VideoController extends BasicCrudController
     public function store(Request $request)
     {
         $validateData = $this->validate($request, $this->rulesStore());
-        $response = DB::transaction(function () use ($validateData) {
-            $response = $this->model()::create($validateData);
-            $this->handleRelations($response, $validateData);
-            // $this->uploadFile($validateData->video_file);
-            return $response;
-        });
-
+        $response = $this->model()::create($validateData);
         $response->refresh();
         return $response;
     }
 
     public function update(Request $request, $id)
     {
-        $obj = $this->findOrFail($id);
+        $response = $this->findOrFail($id);
         $validateData = $this->validate($request, $this->rulesStore());
-        $response = DB::transaction(function () use ($validateData, $obj, $request) {
-            $obj->update($validateData);
-            $this->handleRelations($obj, $request);
-            return $obj;
-        });
-
+        $response->update($validateData);
         $response->refresh();
         return $response;
-    }
-
-    protected function handleRelations($response, $request)
-    {
-        $response->categories()->sync($request['categories_id']);
-        $response->genres()->sync($request['genres_id']);
     }
 
     public function show($id)

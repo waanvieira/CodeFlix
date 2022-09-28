@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api\VideoController;
+namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Category;
 use App\Models\Genre;
@@ -100,6 +100,30 @@ class VideoControllerTest extends TestCase
 
         $this->assertInvalidationInStoreAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
         $this->assertInvalidationInUpdateAction($data, 'max.file', ['max' => Video::VIDEO_FILE_MAX_SIZE]);
+
+        $file = UploadedFile::fake()->create('video.mkv')->size(6000);
+        $data = [
+            'thumb_file' => $file,
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'max.file', ['max' => Video::THUMB_FILE_MAX_SIZE]);
+        $this->assertInvalidationInUpdateAction($data, 'max.file', ['max' => Video::THUMB_FILE_MAX_SIZE]);
+
+        $file = UploadedFile::fake()->create('video.mkv')->size(2000000);
+        $data = [
+            'trailer_file' => $file,
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'max.file', ['max' => Video::TRAILER_FILE_MAX_SIZE]);
+        $this->assertInvalidationInUpdateAction($data, 'max.file', ['max' => Video::TRAILER_FILE_MAX_SIZE]);
+
+        $file = UploadedFile::fake()->create('video.mkv')->size(20000);
+        $data = [
+            'banner_file' => $file,
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'max.file', ['max' => Video::BANNER_FILE_MAX_SIZE]);
+        $this->assertInvalidationInUpdateAction($data, 'max.file', ['max' => Video::BANNER_FILE_MAX_SIZE]);
     }
 
     /**
@@ -279,35 +303,13 @@ class VideoControllerTest extends TestCase
      * @group Video
      * @return void
      */
-    public function testStoreBasicFields()
-    {
-        $category = factory(Category::class)->create();
-        $genre = factory(Genre::class)->create();
-        $genre->categories()->sync($category->id);
-
-        $this->assertStore(
-            $this->data +
-                [
-                    'categories_id' => [$this->category->id],
-                    'genres_id' => [$this->genre->id]
-                ],
-            $this->data
-        );
-    }
-
-        /**
-     * 
-     * @group Video
-     * @return void
-     */
-    public function testStoreWithFiles()
+    public function testStore()
     {
         \Storage::fake();
-        $file = UploadedFile::fake()->create('video.mp4')->size(40000000);
+        $file = UploadedFile::fake()->create('video.mp4')->size(200);
         $category = factory(Category::class)->create();
         $genre = factory(Genre::class)->create();
         $genre->categories()->sync($category->id);
-        $this->data['video_file'] = $file;
 
         $this->assertStore(
             $this->data +
