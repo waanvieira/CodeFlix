@@ -16,6 +16,10 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
+        <!-- CONFIURAÇÃO DE TESTES EM PROD -->
+        <testsuite name="Prod">
+            <directory suffix="Test.php">./tests/Prod</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

@@ -6,12 +6,20 @@
 
 Microsserviço de catálogo
 
+## Back End
+
+PHP: 7.3
+
+## Banco
+
+MySql: 5.7
+
 ## Rodar a aplicação
 
 #### Crie os containers com Docker
 
 ```bash
-$ docker-compose up
+$ docker-compose up -d
 ```
 
 #### Accesse no browser
@@ -24,3 +32,12 @@ http://localhost:8000
 ```
 ./vendor/bin/phpunit
 ```
+### Libs adicionadas
+
+laravel-google-cloud-storage
+https://github.com/Superbalist/laravel-google-cloud-storage
+
+### Cloud
+
+Google Drive
+
