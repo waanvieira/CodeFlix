@@ -6,8 +6,9 @@ trait TestStorages
 {
     protected function deleteAllFiles()
     {
-        //Acessa todos os diretorios e niveis, vamos usar o directies apenas para acessar o nível
+        //Acessa os diretórios e objetos de forma recursiva
         //Storage::allDirectories(directory);
+        //Acessa os diretórios no mesmo nível de diretório
         $dirs = \Storage::directories();
         foreach ($dirs as $dir) {
             $files = \Storage::files($dir);
