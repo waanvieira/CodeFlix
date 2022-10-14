@@ -17,11 +17,11 @@ class Video extends Model
     const NO_RATING = 'L';
 
     const RATING_LIST = ['L', '10', '12', '14', '16', '18'];
-
-    const BANNER_FILE_MAX_SIZE = 10000; // 10 MB
-    const TRAILER_FILE_MAX_SIZE = 1000000; // 1GB
-    const THUMB_FILE_MAX_SIZE = 5000; //5 MB
-    const VIDEO_FILE_MAX_SIZE = 50000000; //50 GB
+    
+    const BANNER_FILE_MAX_SIZE = 1024 * 10; // 10 MB
+    const TRAILER_FILE_MAX_SIZE = 1024 * 1024 * 1; // 1GB
+    const THUMB_FILE_MAX_SIZE = 1024 * 5; //5 MB
+    const VIDEO_FILE_MAX_SIZE = 1024 * 1024 * 50; //50 GB
 
     protected $fillable = [
         'title',
