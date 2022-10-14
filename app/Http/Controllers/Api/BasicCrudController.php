@@ -13,10 +13,19 @@ abstract class BasicCrudController extends Controller
     protected abstract function rulesStore();
 
     protected abstract function rulesUpdate();
+
+    protected abstract function resource();
+
+    protected abstract function resourceCollection();
     
     public function index()
     {
-        return $this->model()::all();
+        $data = !$this->paginationSize ? $this->model()::all() : $this->model()::paginate($this->paginationSize);
+        $resourceCollectionClass = $this->resourceCollection();
+        $refClass = new \ReflectionClass($this->resourceCollection());
+        return $refClass->isSubclassOf(ResourceCollection::class)
+            ? new $resourceCollectionClass($data)
+            : $resourceCollectionClass::collection($data);
     }
 
     public function store(Request $request)
@@ -29,7 +38,9 @@ abstract class BasicCrudController extends Controller
 
     public function show($id)
     {
-        return $this->findOrFail($id);
+        $obj = $this->findOrFail($id);
+        $resource = $this->resource();
+        return new $resource($obj);
     }
 
     public function update(Request $request, $id)
