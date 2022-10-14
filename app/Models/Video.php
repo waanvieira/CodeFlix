@@ -46,6 +46,7 @@ class Video extends Model
 
     public $incrementing = false;
 
+    protected $hidden = ['thumb_file', 'banner_file', 'trailer_file', 'video_file'];
     public static $fileFields = ['banner_file', 'trailer_file', 'thumb_file', 'video_file'];
 
     /**
@@ -142,24 +143,24 @@ class Video extends Model
         return $this->id;
     }
 
-    public function getBannerFileAttribute($value)
+    public function getThumbFileUrlAttribute()
     {
-        return $this->getFile($value);
+        return $this->thumb_file ? $this->getFileUrl($this->thumb_file) : null;
     }
 
-    public function getTrailerFileAttribute($value)
+    public function getBannerFileUrlAttribute()
     {
-        return $this->getFile($value);
+        return $this->banner_file ? $this->getFileUrl($this->banner_file) : null;
     }
 
-    public function getThumbFileAttribute($value)
+    public function getTrailerFileUrlAttribute()
     {
-        return $this->getFile($value);
+        return $this->trailer_file ? $this->getFileUrl($this->trailer_file) : null;
     }
 
-    public function getVideoFileAttribute($value)
+    public function getVideoFileUrlAttribute()
     {
-        return $this->getFile($value);
+        return $this->video_file ? $this->getFileUrl($this->video_file) : null;
     }
 
 }
