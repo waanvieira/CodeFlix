@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 abstract class BasicCrudController extends Controller
 {
+    protected $paginationSize = 15;
+
     protected abstract function model();
 
     protected abstract function rulesStore();
@@ -31,9 +33,10 @@ abstract class BasicCrudController extends Controller
     public function store(Request $request)
     {
         $validateData = $this->validate($request, $this->rulesStore());
-        $category = $this->model()::create($validateData);
-        $category->refresh();
-        return $category;
+        $obj = $this->model()::create($validateData);
+        $obj->refresh();
+        $resource = $this->resource();
+        return new $resource($obj);
     }
 
     public function show($id)
@@ -46,15 +49,16 @@ abstract class BasicCrudController extends Controller
     public function update(Request $request, $id)
     {
         $validateData = $this->validate($request, $this->rulesUpdate());
-        $category = $this->findOrFail($id);
-        $category->update($validateData);
-        return $category;
+        $obj = $this->findOrFail($id);
+        $obj->update($validateData);
+        $resource = $this->resource();
+        return new $resource($obj);
     }
 
     public function destroy($id)
     {
-        $category = $this->findOrFail($id);
-        $category->delete();
+        $obj = $this->findOrFail($id);
+        $obj->delete();
         return response()->noContent(); //204 - No content
     }
 

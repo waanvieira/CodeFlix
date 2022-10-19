@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\VideoResource;
 use App\Models\Video;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class VideoController extends BasicCrudController
 {
@@ -35,23 +35,26 @@ class VideoController extends BasicCrudController
     public function store(Request $request)
     {
         $validateData = $this->validate($request, $this->rulesStore());
-        $response = $this->model()::create($validateData);
-        $response->refresh();
-        return $response;
+        $obj = $this->model()::create($validateData);
+        $obj->refresh();
+        $resource = $this->resource();
+        return new $resource($obj);
     }
 
     public function update(Request $request, $id)
     {
-        $response = $this->findOrFail($id);
+        $obj = $this->findOrFail($id);
         $validateData = $this->validate($request, $this->rulesStore());
-        $response->update($validateData);
-        $response->refresh();
-        return $response;
+        $obj->update($validateData);
+        $obj->refresh();
+        $resource = $this->resource();
+        return new $resource($obj);
     }
 
     public function show($id)
     {
-        return $this->model()::with('genres', 'categories')->where('id', $id)->first();
+        return parent::show($id);
+        // return $this->model()::with('genres', 'categories')->where('id', $id)->first();
     }
 
     protected function model()
@@ -72,5 +75,15 @@ class VideoController extends BasicCrudController
     protected function uploadDir()
     {
         return 'video' ;
+    }
+
+    protected function resourceCollection()
+    {
+        return $this->resource();
+    }
+
+    protected function resource()
+    {
+        return VideoResource::class;
     }
 }

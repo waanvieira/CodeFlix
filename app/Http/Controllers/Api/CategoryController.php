@@ -21,12 +21,6 @@ class CategoryController extends BasicCrudController
         ];
     }
 
-    public function show($id)
-    {
-        $obj = parent::show($id);
-        return new CategoryResource($obj);
-    }
-
     protected function model()
     {
         return Category::class;

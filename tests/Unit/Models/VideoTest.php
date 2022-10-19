@@ -116,7 +116,7 @@ class VideoTest extends TestCase
      */
     public function testBannerSizeMax()
     {
-        $this->assertEquals(10000, Video::BANNER_FILE_MAX_SIZE);
+        $this->assertEquals(10240, Video::BANNER_FILE_MAX_SIZE);
     }
 
     /**
@@ -126,7 +126,7 @@ class VideoTest extends TestCase
      */
     public function testTrailerSizeMax()
     {
-        $this->assertEquals(1000000, Video::TRAILER_FILE_MAX_SIZE);
+        $this->assertEquals(1048576, Video::TRAILER_FILE_MAX_SIZE);
     }
 
     /**
@@ -136,7 +136,7 @@ class VideoTest extends TestCase
      */
     public function testThumbSizeMax()
     {
-        $this->assertEquals(5000, Video::THUMB_FILE_MAX_SIZE);
+        $this->assertEquals(5120, Video::THUMB_FILE_MAX_SIZE);
     }
 
     /**
@@ -146,6 +146,6 @@ class VideoTest extends TestCase
      */
     public function testVideoSizeMax()
     {
-        $this->assertEquals(50000000, Video::VIDEO_FILE_MAX_SIZE);
+        $this->assertEquals(52428800, Video::VIDEO_FILE_MAX_SIZE);
     }
 }

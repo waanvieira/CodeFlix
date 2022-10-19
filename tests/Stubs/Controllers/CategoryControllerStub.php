@@ -26,4 +26,14 @@ class CategoryControllerStub extends BasicCrudController
     {
         return $this->rules;
     }
+
+    protected function resourceCollection()
+    {
+        return null;
+    }
+
+    protected function resource()
+    {
+        return null;
+    }
 }
