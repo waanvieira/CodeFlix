@@ -24,8 +24,9 @@ class VideoUploadTest extends BaseVideoTestCase
                 'video_file' => UploadedFile::fake()->image('video.mp4'),
             ]
         );
-        \Storage::assertExists("{$video->thumb_file}");
-        \Storage::assertExists("{$video->video_file}");
+
+        \Storage::assertExists("{$video->id}/{$video->thumb_file}");
+        \Storage::assertExists("{$video->id}/{$video->video_file}");
     }
 
     /**
@@ -71,8 +72,8 @@ class VideoUploadTest extends BaseVideoTestCase
             'thumb_file' => $thumbFile,
             'video_file' => $videoFile,
         ]);
-        \Storage::assertExists("{$video->thumb_file}");
-        \Storage::assertExists("{$video->video_file}");
+        \Storage::assertExists("{$video->id}/{$video->thumb_file}");
+        \Storage::assertExists("{$video->id}/{$video->video_file}");
 
         $newVideoFile = UploadedFile::fake()->image('video.mp4');
         $video->update($this->data + [
